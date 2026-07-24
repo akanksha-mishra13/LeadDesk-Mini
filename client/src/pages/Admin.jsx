@@ -10,17 +10,6 @@ function Admin() {
 
   const API_URL = "http://localhost:5001/api/leads";
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-
-    fetchLeads();
-  }, [search]);
-
   const fetchLeads = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -36,7 +25,7 @@ function Admin() {
 
       setLeads(res.data);
     } catch (err) {
-      console.error(err);
+      console.log(err);
 
       if (err.response?.status === 401) {
         localStorage.removeItem("token");
@@ -44,6 +33,17 @@ function Admin() {
       }
     }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    fetchLeads();
+  }, [search]);
 
   const updateStatus = async (id, status) => {
     try {
@@ -61,12 +61,7 @@ function Admin() {
 
       fetchLeads();
     } catch (err) {
-      console.error(err);
-
-      if (err.response?.status === 401) {
-        localStorage.removeItem("token");
-        navigate("/login");
-      }
+      console.log(err);
     }
   };
 
@@ -76,18 +71,33 @@ function Admin() {
   };
 
   return (
-    <div style={{ padding: "30px" }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#0f172a",
+        color: "white",
+        padding: "40px",
+      }}
+    >
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "20px",
+          marginBottom: "25px",
         }}
       >
         <h1>Admin Dashboard</h1>
 
-        <button onClick={logout}>Logout</button>
+        <button
+          onClick={logout}
+          style={{
+            padding: "10px 20px",
+            cursor: "pointer",
+          }}
+        >
+          Logout
+        </button>
       </div>
 
       <input
@@ -96,9 +106,9 @@ function Admin() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         style={{
-          width: "300px",
+          width: "320px",
           padding: "10px",
-          marginBottom: "20px",
+          marginBottom: "25px",
         }}
       />
 
@@ -108,6 +118,8 @@ function Admin() {
         style={{
           width: "100%",
           borderCollapse: "collapse",
+          background: "white",
+          color: "black",
         }}
       >
         <thead>
@@ -152,6 +164,27 @@ function Admin() {
           )}
         </tbody>
       </table>
+
+      <footer
+        style={{
+          textAlign: "center",
+          marginTop: "40px",
+          color: "#94a3b8",
+        }}
+      >
+        Built for Digital Heroes Training Task ·{" "}
+        <a
+          href="https://digitalheroesco.com"
+          target="_blank"
+          rel="noreferrer"
+          style={{
+            color: "#60a5fa",
+            textDecoration: "none",
+          }}
+        >
+          digitalheroesco.com
+        </a>
+      </footer>
     </div>
   );
 }
